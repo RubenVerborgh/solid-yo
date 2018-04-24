@@ -13,6 +13,11 @@
     <p>Send a <q>Yo</q> to a person of your choice.</p>
   </header>
   <main>
+    <h2>Source</h2>
+    <p>
+      <label for="source">Yo source:</label>
+      <input id="source" value="data/yo.ttl" />
+    </p>
     <h2>Random Yo</h2>
     <div class="yo">
       <p>
@@ -35,11 +40,18 @@
   <script>
     // Collect DOM elements
     const elements = {};
-    ['from', 'to', 'recipient', 'send'].forEach(name =>
+    ['source', 'from', 'to', 'recipient', 'send'].forEach(name =>
       elements[name] = document.getElementById(name));
 
-    // Initialize data source
-    const source = new YoSource('data/yo.ttl');
+    // Sets the data source based on the field value
+    let source;
+    function updateSource() {
+      source = new YoSource(elements.source.value);
+      displayRandomYo();
+    }
+    updateSource();
+    // Update data source on change
+    elements.source.addEventListener('change', updateSource);
 
     // Displays a random Yo
     async function displayRandomYo() {
@@ -47,8 +59,6 @@
       elements.from.innerText = await from;
       elements.to.innerText = await to;
     }
-
-    displayRandomYo();
   </script>
 </body>
 </html>
