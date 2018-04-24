@@ -44,8 +44,8 @@
     // Displays a random Yo
     async function displayRandomYo() {
       const { from, to } = await source.getRandomYo();
-      elements.from.innerText = from;
-      elements.to.innerText = to;
+      elements.from.innerText = await from;
+      elements.to.innerText = await to;
     }
 
     displayRandomYo();

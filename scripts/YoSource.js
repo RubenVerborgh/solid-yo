@@ -1,9 +1,11 @@
 const AS = 'https://www.w3.org/ns/activitystreams#';
+const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
 
 const predicates = {
   summary: N3.DataFactory.namedNode(AS + 'summary'),
   actor: N3.DataFactory.namedNode(AS + 'actor'),
   to: N3.DataFactory.namedNode(AS + 'to'),
+  label: N3.DataFactory.namedNode(RDFS + 'label'),
 };
 const literals = {
   yo: N3.DataFactory.literal('Yo', 'en'),
@@ -45,8 +47,8 @@ class YoSource {
       // If the message has a unique sender and recipient, store it
       if (senders.length === 1 && recipients.length === 1) {
         yos.push({
-          from: senders[0].value,
-          to: recipients[0].value,
+          from: this._getLabel(senders[0]),
+          to: this._getLabel(recipients[0]),
         });
       }
     });
@@ -59,5 +61,27 @@ class YoSource {
     if (yos.length === 0)
       throw new Error('No Yo found.');
     return yos[Math.floor(Math.random() * yos.length)];
+  }
+
+  // Obtains a label for the given entity
+  async _getLabel(entity) {
+    // Try dereferencing the entity to obtain its label
+    try {
+      // Retrieve and parse the document
+      const document = await this._fetch(entity.value);
+      const parser = new N3.Parser({ baseIRI: entity.value });
+      const quads = parser.parse(await document.text());
+
+      // Find the first label for the subject
+      const label = quads.find(q =>
+        q.subject.equals(entity) && q.predicate.equals(predicates.label));
+
+      // Return the label or the entity's IRI
+      return label ? label.object.value : entity.value;
+    }
+    // In case of errors, return the entity's IRI
+    catch (error) {
+      return entity.value;
+    }
   }
 }
