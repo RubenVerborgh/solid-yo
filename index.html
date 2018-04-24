@@ -47,7 +47,7 @@
     // Sets the data source based on the field value
     let source;
     function updateSource() {
-      source = new YoSource(elements.source.value);
+      source = new YoSource(elements.source.value, SolidAuthClient.fetch);
       displayRandomYo();
     }
     updateSource();

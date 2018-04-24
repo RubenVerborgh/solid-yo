@@ -15,7 +15,7 @@ const literals = {
 class YoSource {
   // Creates a new Yo source with the given fetcher
   constructor (source, fetch = (...args) => window.fetch(...args)) {
-    this._source = source;
+    this._source = new URL(source, window.location).toString();
     this._fetch = fetch;
   }
 
