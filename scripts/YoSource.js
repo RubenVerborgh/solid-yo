@@ -63,6 +63,25 @@ class YoSource {
     return yos[Math.floor(Math.random() * yos.length)];
   }
 
+  // Adds a Yo to the source
+  async addYo({ from, to }) {
+    // Create the SPARQL UPDATE query
+    const query = `
+      INSERT DATA {
+        [] <${AS}actor>   <${this._escape(from)}>;
+           <${AS}to>      <${this._escape(to)}>;
+           <${AS}summary> "Yo"@en.
+      }`
+    // Send a PATCH request to update the source
+    const response = await this._fetch(this._source, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/sparql-update' },
+      body: query,
+      credentials: 'include',
+    });
+    return response.status === 200;
+  }
+
   // Obtains a label for the given entity
   async _getLabel(entity) {
     // Try dereferencing the entity to obtain its label
@@ -83,5 +102,13 @@ class YoSource {
     catch (error) {
       return entity.value;
     }
+  }
+
+  // Escapes the IRI for use in a SPARQL query
+  _escape (iri) {
+    // More of a sanity check, really
+    if (!iri || !/^\w+:[^<> ]+$/.test(iri))
+      throw new Error(`Invalid IRI: ${iri}`);
+    return iri;
   }
 }

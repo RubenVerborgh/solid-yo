@@ -33,7 +33,7 @@
         <input id="recipient" />
       </p>
       <p>
-        <input type="submit" id="send" value="Send" />
+        <input type="button" id="send" value="Send" />
       </p>
     </form>
   </main>
@@ -59,6 +59,18 @@
       elements.from.innerText = await from;
       elements.to.innerText = await to;
     }
+
+    // Add a Yo on click
+    elements.send.addEventListener('click', async () => {
+      const from = 'https://ruben.verborgh.org/profile/#me';
+      const to = elements.recipient.value;
+      try {
+        await source.addYo({ from, to });
+      }
+      catch (error) {
+        alert(`Could not send Yo: ${error.message}`);
+      }
+    });
   </script>
 </body>
 </html>
