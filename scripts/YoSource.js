@@ -81,6 +81,8 @@ class YoSource {
       body: query,
       credentials: 'include',
     });
+    // Invalidate Yo cache
+    delete this._yos;
     return response.status === 200;
   }
 
