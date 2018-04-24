@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Yo</title>
   <link rel="stylesheet" href="styles/main.css">
+  <script src="scripts/YoSource.js"></script>
 </head>
 <body>
   <header>
@@ -30,5 +31,23 @@
       </p>
     </form>
   </main>
+  <script>
+    // Collect DOM elements
+    const elements = {};
+    ['from', 'to', 'recipient', 'send'].forEach(name =>
+      elements[name] = document.getElementById(name));
+
+    // Initialize data source
+    const source = new YoSource();
+
+    // Displays a random Yo
+    async function displayRandomYo() {
+      const { from, to } = await source.getRandomYo();
+      elements.from.innerText = from;
+      elements.to.innerText = to;
+    }
+
+    displayRandomYo();
+  </script>
 </body>
 </html>
