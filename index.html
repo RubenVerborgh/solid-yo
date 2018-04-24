@@ -99,8 +99,11 @@
       await SolidAuthClient.logout();
       // Try to log in the user
       const idp = window.prompt("Please enter your WebID or your identity provider's URL.");
-      if (idp)
-        await SolidAuthClient.login(idp);
+      if (idp) {
+        const login = await SolidAuthClient.login(idp);
+        if (typeof login === 'function')
+          return login();
+      }
       displayUser();
     });
   </script>
