@@ -30,6 +30,10 @@
     <h2>Send a Yo</h2>
     <form>
       <p>
+        You are <span id="user">anonymous</span>.
+        <input type="button" id="login" value="Log in" />
+      </p>
+      <p>
         <label for="recipient">Send a Yo to</label>
         <input id="recipient" />
       </p>
@@ -41,7 +45,7 @@
   <script>
     // Collect DOM elements
     const elements = {};
-    ['source', 'from', 'to', 'recipient', 'send'].forEach(name =>
+    ['source', 'from', 'to', 'user', 'login', 'recipient', 'send'].forEach(name =>
       elements[name] = document.getElementById(name));
 
     // Sets the data source based on the field value
@@ -63,7 +67,15 @@
 
     // Add a Yo on click
     elements.send.addEventListener('click', async () => {
-      const from = 'https://ruben.verborgh.org/profile/#me';
+      // Obtain the user's identity
+      const session = await SolidAuthClient.currentSession();
+      if (!session) {
+        alert('You need to log in first.');
+        return;
+      }
+
+      // Create and add the Yo
+      const from = session.webId;
       const to = elements.recipient.value;
       try {
         await source.addYo({ from, to });
@@ -71,6 +83,24 @@
       catch (error) {
         alert(`Could not send Yo: ${error.message}`);
       }
+    });
+
+    // Displays the user's identity
+    async function displayUser() {
+      const session = await SolidAuthClient.currentSession();
+      elements.user.innerText = session ? session.webId : 'anonymous';
+    }
+    displayUser();
+
+    // Log the user in on click
+    elements.login.addEventListener('click', async () => {
+      // Invalidate any existing login
+      await SolidAuthClient.logout();
+      // Try to log in the user
+      const idp = window.prompt("Please enter your WebID or your identity provider's URL.");
+      if (idp)
+        await SolidAuthClient.login(idp);
+      displayUser();
     });
   </script>
 </body>
