@@ -1,0 +1,11 @@
+@prefix as: <https://www.w3.org/ns/activitystreams#>.
+
+[] as:summary "Yo"@en.
+
+[] as:actor <https://ruben.verborgh.org/profile/#me>;
+   as:to    <https://pietercolpaert.be/#me>;
+   as:summary "Yo"@en.
+
+[] as:actor <https://pietercolpaert.be/#me>;
+   as:to    <https://ruben.verborgh.org/profile/#me>;
+   as:summary "Yo"@en.
