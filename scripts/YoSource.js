@@ -26,7 +26,9 @@ class YoSource {
       return this._yos;
 
     // Fetch and parse the source document
-    const document = await this._fetch(this._source);
+    const document = await this._fetch(this._source, {
+      headers: { 'Accept': 'text/turtle' },
+    });
     const parser = new N3.Parser({ baseIRI: this._source });
     const quads = parser.parse(await document.text());
 
@@ -87,7 +89,9 @@ class YoSource {
     // Try dereferencing the entity to obtain its label
     try {
       // Retrieve and parse the document
-      const document = await this._fetch(entity.value);
+      const document = await this._fetch(entity.value, {
+        headers: { 'Accept': 'text/turtle' },
+      });
       const parser = new N3.Parser({ baseIRI: entity.value });
       const quads = parser.parse(await document.text());
 
