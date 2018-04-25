@@ -10,3 +10,8 @@ body, input {
 input:not([type]) {
   min-width: 400px;
 }
+
+footer {
+  padding: 1em 0;
+  font-style: italic;
+}
